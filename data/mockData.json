@@ -54,5 +54,124 @@
         "description": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories.",
         "url": "https://github.com",
         "category": "Platform"
+    },
+    {
+        "id": "9",
+        "title": "Prisma",
+        "description": "Next-generation ORM for Node.js and TypeScript. Prisma helps app developers build faster and make fewer errors with an open source database toolkit.",
+        "url": "https://www.prisma.io",
+        "category": "Database"
+    },
+    {
+        "id": "10",
+        "title": "PostgreSQL",
+        "description": "The world's most advanced open source relational database. PostgreSQL is a powerful, open source object-relational database system with reliability and data integrity.",
+        "url": "https://www.postgresql.org",
+        "category": "Database"
+    },
+    {
+        "id": "11",
+        "title": "Neon",
+        "description": "Serverless Postgres built for the cloud. Neon separates storage and compute to offer autoscaling, branching, and bottomless storage.",
+        "url": "https://neon.tech",
+        "category": "Database"
+    },
+    {
+        "id": "12",
+        "title": "Vue.js",
+        "description": "The Progressive JavaScript Framework. An approachable, performant and versatile framework for building web user interfaces.",
+        "url": "https://vuejs.org",
+        "category": "Framework"
+    },
+    {
+        "id": "13",
+        "title": "Svelte",
+        "description": "Cybernetically enhanced web apps. Svelte is a radical new approach to building user interfaces with less code and truly reactive components.",
+        "url": "https://svelte.dev",
+        "category": "Framework"
+    },
+    {
+        "id": "14",
+        "title": "Node.js",
+        "description": "Node.js is an open-source, cross-platform JavaScript runtime environment. It executes JavaScript code outside a web browser using the V8 engine.",
+        "url": "https://nodejs.org",
+        "category": "Runtime"
+    },
+    {
+        "id": "15",
+        "title": "Vite",
+        "description": "Next Generation Frontend Tooling. Get ready for a development environment that can finally catch up with you. Lightning fast cold server start and instant HMR.",
+        "url": "https://vitejs.dev",
+        "category": "Tool"
+    },
+    {
+        "id": "16",
+        "title": "Docker",
+        "description": "Accelerate how you build, share, and run applications. Docker helps developers build, share, test, and deploy applications with containers.",
+        "url": "https://www.docker.com",
+        "category": "Tool"
+    },
+    {
+        "id": "17",
+        "title": "Jest",
+        "description": "Delightful JavaScript Testing. Jest is a delightful JavaScript Testing Framework with a focus on simplicity and support for large web applications.",
+        "url": "https://jestjs.io",
+        "category": "Testing"
+    },
+    {
+        "id": "18",
+        "title": "Vitest",
+        "description": "A blazing fast unit test framework powered by Vite. Vitest provides a lightning fast test runner with an instant feedback loop.",
+        "url": "https://vitest.dev",
+        "category": "Testing"
+    },
+    {
+        "id": "19",
+        "title": "Playwright",
+        "description": "Fast and reliable end-to-end testing for modern web apps. Playwright enables reliable end-to-end testing for modern web applications.",
+        "url": "https://playwright.dev",
+        "category": "Testing"
+    },
+    {
+        "id": "20",
+        "title": "AWS",
+        "description": "Amazon Web Services offers reliable, scalable, and inexpensive cloud computing services. Build sophisticated applications with increased flexibility and scalability.",
+        "url": "https://aws.amazon.com",
+        "category": "Cloud"
+    },
+    {
+        "id": "21",
+        "title": "Firebase",
+        "description": "Firebase helps you build and run successful apps. Backed by Google and loved by app development teams - from startups to global enterprises.",
+        "url": "https://firebase.google.com",
+        "category": "Platform"
+    },
+    {
+        "id": "22",
+        "title": "Supabase",
+        "description": "The open source Firebase alternative. Build in a weekend, scale to millions. Supabase is an open source Firebase alternative with Postgres database.",
+        "url": "https://supabase.com",
+        "category": "Platform"
+    },
+    {
+        "id": "23",
+        "title": "Redux",
+        "description": "A Predictable State Container for JS Apps. Redux helps you write applications that behave consistently and are easy to test.",
+        "url": "https://redux.js.org",
+        "category": "Library"
+    },
+    {
+        "id": "24",
+        "title": "Zustand",
+        "description": "A small, fast and scalable bearbones state-management solution. Zustand has a comfy API based on hooks and isn't boilerplatey.",
+        "url": "https://github.com/pmndrs/zustand",
+        "category": "Library"
+    },
+    {
+        "id": "25",
+        "title": "Framer Motion",
+        "description": "A production-ready motion library for React. Framer Motion makes creating animations simple with a declarative API.",
+        "url": "https://www.framer.com/motion",
+        "category": "Library"
     }
 ]

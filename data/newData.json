@@ -1,0 +1,142 @@
+[
+    {
+        "id": "51",
+        "title": "Remix",
+        "description": "Full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience.",
+        "url": "https://remix.run",
+        "category": "Frontend"
+    },
+    {
+        "id": "52",
+        "title": "Astro",
+        "description": "The web framework for content-driven websites. Astro powers the world's fastest websites, client-side web apps, dynamic API endpoints, and everything in-between.",
+        "url": "https://astro.build",
+        "category": "Frontend"
+    },
+    {
+        "id": "53",
+        "title": "Solid.js",
+        "description": "Simple and performant reactivity for building user interfaces. Solid is a declarative JavaScript library for creating user interfaces with fine-grained reactivity.",
+        "url": "https://www.solidjs.com",
+        "category": "Frontend"
+    },
+    {
+        "id": "54",
+        "title": "Deno",
+        "description": "A modern runtime for JavaScript and TypeScript. Deno is secure by default, supports TypeScript out of the box, and has built-in development tools.",
+        "url": "https://deno.land",
+        "category": "Backend"
+    },
+    {
+        "id": "55",
+        "title": "Bun",
+        "description": "Incredibly fast JavaScript runtime, bundler, test runner, and package manager – all in one. Bun is designed as a drop-in replacement for Node.js.",
+        "url": "https://bun.sh",
+        "category": "Backend"
+    },
+    {
+        "id": "56",
+        "title": "tRPC",
+        "description": "End-to-end typesafe APIs made easy. Experience the full power of TypeScript inference to boost productivity for your full-stack application.",
+        "url": "https://trpc.io",
+        "category": "Backend"
+    },
+    {
+        "id": "57",
+        "title": "Drizzle ORM",
+        "description": "TypeScript ORM that is production ready. Drizzle is a lightweight and performant TypeScript ORM with developer experience in mind.",
+        "url": "https://orm.drizzle.team",
+        "category": "Backend"
+    },
+    {
+        "id": "58",
+        "title": "Turbo",
+        "description": "Incremental bundler and build system optimized for JavaScript and TypeScript, written in Rust. Turbo makes your team faster.",
+        "url": "https://turbo.build",
+        "category": "DevOps"
+    },
+    {
+        "id": "59",
+        "title": "Nx",
+        "description": "Smart, fast and extensible build system. Nx is a build system with built-in tooling and advanced CI capabilities for monorepos.",
+        "url": "https://nx.dev",
+        "category": "DevOps"
+    },
+    {
+        "id": "60",
+        "title": "Cypress",
+        "description": "Fast, easy and reliable testing for anything that runs in a browser. Cypress makes it easy to write, debug and run end-to-end tests.",
+        "url": "https://www.cypress.io",
+        "category": "Testing"
+    },
+    {
+        "id": "61",
+        "title": "Testing Library",
+        "description": "Simple and complete testing utilities that encourage good testing practices. Testing Library helps you write maintainable tests.",
+        "url": "https://testing-library.com",
+        "category": "Testing"
+    },
+    {
+        "id": "62",
+        "title": "Zod",
+        "description": "TypeScript-first schema validation with static type inference. Zod is designed to be as developer-friendly as possible with zero dependencies.",
+        "url": "https://zod.dev",
+        "category": "Backend"
+    },
+    {
+        "id": "63",
+        "title": "Pnpm",
+        "description": "Fast, disk space efficient package manager. Pnpm uses a content-addressable filesystem to store packages and creates hard links.",
+        "url": "https://pnpm.io",
+        "category": "DevOps"
+    },
+    {
+        "id": "64",
+        "title": "Turborepo",
+        "description": "High-performance build system for JavaScript and TypeScript codebases. Turborepo leverages caching to turbocharge your local and CI builds.",
+        "url": "https://turbo.build/repo",
+        "category": "DevOps"
+    },
+    {
+        "id": "65",
+        "title": "SWR",
+        "description": "React Hooks for Data Fetching. SWR is a strategy to first return the data from cache, then send the fetch request, and finally come with up-to-date data.",
+        "url": "https://swr.vercel.app",
+        "category": "Frontend"
+    },
+    {
+        "id": "66",
+        "title": "TanStack Query",
+        "description": "Powerful asynchronous state management for TS/JS, React, Solid, Vue and Svelte. Fetch, cache and update data without touching any global state.",
+        "url": "https://tanstack.com/query",
+        "category": "Frontend"
+    },
+    {
+        "id": "67",
+        "title": "Shadcn UI",
+        "description": "Beautifully designed components that you can copy and paste into your apps. Accessible, customizable, and open source.",
+        "url": "https://ui.shadcn.com",
+        "category": "Frontend"
+    },
+    {
+        "id": "68",
+        "title": "Radix UI",
+        "description": "Unstyled, accessible components for building high‑quality design systems and web apps in React. Radix provides low-level UI primitives.",
+        "url": "https://www.radix-ui.com",
+        "category": "Frontend"
+    },
+    {
+        "id": "69",
+        "title": "Headless UI",
+        "description": "Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS. Built by the Tailwind team.",
+        "url": "https://headlessui.com",
+        "category": "Frontend"
+    },
+    {
+        "id": "70",
+        "title": "Railway",
+        "description": "Infrastructure, Instantly. Railway is a deployment platform where you can provision infrastructure, develop with that infrastructure locally, and deploy to the cloud.",
+        "url": "https://railway.app",
+        "category": "DevOps"
+    }
+]
