@@ -16,7 +16,6 @@ export function ChatMessage({ role, content }: ChatMessageProps) {
 
     return (
         <div className={`flex w-full gap-4 py-6 px-4 md:px-8 ${isUser ? 'bg-transparent' : 'bg-[#1A1F2E]'}`}>
-            {/* Avatar */}
             <div className="flex-shrink-0">
                 {isUser ? (
                     <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">

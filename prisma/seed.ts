@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import mockData from '../data/mockData.json';
-
 import resourcesData from '../data/resources.json';
 
 const prisma = new PrismaClient();
