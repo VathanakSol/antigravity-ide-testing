@@ -1,5 +1,8 @@
 "use client";
 
+import { BetaToggle } from "@/components/BetaToggle";
+import { getFeatureFlag } from "@/lib/featureFlags";
+import Link from "next/link";
 import { useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
 
 interface ImageData {
@@ -25,6 +28,28 @@ const FALLBACK_IMAGES = [
 ];
 
 export default function ImageGallery() {
+    const [isEnabledUI, setIsEnabledUI] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setIsEnabledUI(getFeatureFlag('features_enabled'));
+        setIsLoading(false);
+    }, []);
+
+    if (isLoading) {
+        return null;
+    }
+
+    return (
+        <>
+            <BetaToggle />
+            {isEnabledUI ? <UploadFeature /> : <ComingSoon />}
+        </>
+    );
+}
+
+
+function UploadFeature() {
     const [images, setImages] = useState<ImageData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showUploadModal, setShowUploadModal] = useState(false);
@@ -447,7 +472,7 @@ export default function ImageGallery() {
                                     </div>
                                     <div className="h-3 bg-gray-700 rounded-full overflow-hidden border border-gray-600">
                                         <div
-                                            className="h-full bg-gradient-to-r from-accent-yellow to-accent-mint transition-all duration-300 ease-out shadow-lg"
+                                            className="h-full bg-accent-yellow transition-all duration-300 ease-out shadow-lg"
                                             style={{ width: `${uploadProgress}%` }}
                                         />
                                     </div>
@@ -533,5 +558,53 @@ export default function ImageGallery() {
                 </div>
             )}
         </div>
-    );
+    )
 }
+
+function ComingSoon() {
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none"
+                style={{
+                    backgroundImage: 'radial-gradient(#3B00B9 1px, transparent 1px)',
+                    backgroundSize: '40px 40px'
+                }}
+            ></div>
+
+            <div className="max-w-3xl text-center space-y-4 relative z-10">
+                {/* Icon */}
+                <div className="relative inline-block mb-4">
+                    <div className="w-20 h-20 md:w-24 md:h-24 bg-[#1F2937] mx-auto -rotate-6 border-4 border-accent-mint shadow-[8px_8px_0px_0px_#FFD300] flex items-center justify-center transition-transform hover:rotate-0 duration-300">
+                        <span className="text-4xl md:text-5xl">🚀</span>
+                    </div>
+                </div>
+
+                {/* Main Heading */}
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-tight">
+                    SOMETHING <br />
+                    <span className="text-accent-yellow drop-shadow-sm">EPIC</span> IS <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-mint to-accent-blue">BREWING</span>
+                </h1>
+
+                {/* Subtext */}
+                <p className="text-lg md:text-xl text-gray-400 font-medium max-w-xl mx-auto leading-relaxed">
+                    Our <span className="text-accent-mint font-bold">Upload</span> is getting a major upgrade.
+                    Stay tuned for a smarter, faster coding experience.
+                </p>
+
+                {/* CTA Button */}
+                <div className="pt-8">
+                    <Link
+                        href="/"
+                        className="inline-block px-8 py-4 bg-accent-yellow text-[#10162F] font-black text-lg uppercase tracking-widest hover:translate-y-1 hover:shadow-none shadow-[6px_6px_0px_0px_#FFFFFF] transition-all border-2 border-white"
+                    >
+                        Return to Home
+                    </Link>
+                </div>
+            </div>
+
+
+        </div>
+    )
+} 
