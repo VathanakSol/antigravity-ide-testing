@@ -12,6 +12,7 @@ export default function ChatPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsEnabledUI(getFeatureFlag('features_enabled'));
         setIsLoading(false);
     }, []);
@@ -74,15 +75,15 @@ function ComingSoon() {
                 </div>
 
                 {/* Main Heading */}
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-tight">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tighter leading-tight">
                     SOMETHING <br />
                     <span className="text-accent-yellow drop-shadow-sm">EPIC</span> IS <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-mint to-accent-blue">BREWING</span>
+                    <span className="text-accent-yellow">BREWING</span>
                 </h1>
 
                 {/* Subtext */}
                 <p className="text-lg md:text-xl text-gray-400 font-medium max-w-xl mx-auto leading-relaxed">
-                    Our <span className="text-accent-mint font-bold">AI Pair Programmer</span> is getting a major upgrade.
+                    Our <span className="text-accent-mint font-bold">AI Chat</span> is getting a major upgrade.
                     Stay tuned for a smarter, faster coding experience.
                 </p>
 

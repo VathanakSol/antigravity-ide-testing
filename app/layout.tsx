@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${spaceGrotesk.variable} ${kantumruy.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${spaceGrotesk.className} ${kantumruy.variable} antialiased`}
       >
         <Header />
         {children}
