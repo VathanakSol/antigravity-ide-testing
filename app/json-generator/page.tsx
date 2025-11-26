@@ -5,7 +5,6 @@ import { generateRequestBody } from '../actions/json-generator';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import Link from 'next/link';
-import { BetaToggle } from '@/components/BetaToggle';
 import { getFeatureFlag } from '@/lib/featureFlags';
 
 export default function JsonGenerator() {
@@ -24,7 +23,6 @@ export default function JsonGenerator() {
 
     return (
         <>
-            <BetaToggle />
             {isEnabledUI ? <JsonGeneratorFeature /> : <ComingSoon />}
         </>
     );

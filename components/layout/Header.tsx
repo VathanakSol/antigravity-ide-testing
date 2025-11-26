@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
+import { BetaToggle } from '@/components/BetaToggle';
 
 export function Header() {
     const pathname = usePathname();
@@ -76,17 +77,22 @@ export function Header() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <nav className="hidden md:flex gap-8 text-sm font-sans font-bold text-white">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`transition-colors ${pathname === item.href ? 'text-accent-yellow' : 'hover:text-accent-yellow'}`}
-                            >
-                                {item.name}
-                            </Link>
-                        ))}
-                    </nav>
+                    <div className="hidden md:flex items-center gap-4">
+                        <nav className="flex gap-8 text-sm font-sans font-bold text-white">
+                            {navItems.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className={`transition-colors ${pathname === item.href ? 'text-accent-yellow' : 'hover:text-accent-yellow'}`}
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </nav>
+                        <div className="border-l border-gray-700 pl-4">
+                            <BetaToggle flagName="features_enabled" />
+                        </div>
+                    </div>
 
                     <button
                         type="button"
@@ -135,6 +141,13 @@ export function Header() {
                                     </Link>
                                 ))}
                             </nav>
+
+                            <div className="border-t border-gray-700 px-4 py-3">
+                                <div className="flex items-center justify-between">
+                                    {/* <span className="text-xs font-bold text-[#00FFF0] uppercase tracking-wider">Beta Mode</span> */}
+                                    <BetaToggle flagName="features_enabled" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

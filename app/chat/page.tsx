@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
 import { ChatWindow } from '@/components/chat/ChatWindow';
-import { BetaToggle } from '@/components/BetaToggle';
 import { getFeatureFlag } from '@/lib/featureFlags';
 
 export default function ChatPage() {
@@ -23,7 +22,6 @@ export default function ChatPage() {
 
     return (
         <>
-            <BetaToggle />
             {isEnabledUI ? <ChatFeature /> : <ComingSoon />}
         </>
     );
