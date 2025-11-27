@@ -5,7 +5,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { SearchResults } from '@/components/SearchResults';
 import { searchInRealTime } from '@/app/actions/db';
 import { getTechNews, NewsItem } from '@/app/actions/news';
-import { Header } from '@/components/layout/Header';
+import { getMotivationalQuote } from '@/app/actions/quote';
 import { Footer } from '@/components/layout/Footer';
 
 interface Result {
@@ -23,9 +23,21 @@ export default function RealTimeSearch() {
     const [results, setResults] = useState<Result[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [news, setNews] = useState<NewsItem[]>([]);
-    const [newsSource, setNewsSource] = useState<'hn' | 'devto'>('hn');
+    const [newsSource, setNewsSource] = useState<'hn' | 'devto' | 'reddit' | 'github'>('hn');
     const [newsCategory, setNewsCategory] = useState<'latest' | 'top' | 'show' | 'ask'>('latest');
     const [isNewsLoading, setIsNewsLoading] = useState(false);
+    const [quote, setQuote] = useState<string>('');
+    const [isQuoteLoading, setIsQuoteLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchQuote = async () => {
+            setIsQuoteLoading(true);
+            const motivationalQuote = await getMotivationalQuote();
+            setQuote(motivationalQuote);
+            setIsQuoteLoading(false);
+        };
+        fetchQuote();
+    }, []);
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -62,6 +74,25 @@ export default function RealTimeSearch() {
 
     return (
         <div className="min-h-screen flex flex-col bg-background font-sans text-foreground selection:bg-accent-yellow selection:text-black">
+
+            {/* Motivational Quote Banner */}
+            <div className="w-full bg-linear-to-r from-accent-yellow/10 via-accent-yellow/5 to-transparent border-b border-accent-yellow/20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    {isQuoteLoading ? (
+                        <div className="flex items-center justify-center gap-3">
+                            <div className="h-6 w-3/4 max-w-2xl bg-gray-800/50 rounded animate-pulse"></div>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center gap-3 animate-fade-in-up">
+                            <span className="text-accent-yellow text-xl">✨</span>
+                            <p className="text-gray-300 text-md font-medium text-center italic">
+                                &quot;{quote}&quot;
+                            </p>
+                            <span className="text-accent-yellow text-xl">✨</span>
+                        </div>
+                    )}
+                </div>
+            </div>
 
             {/* Main Content */}
             <main className="flex-grow flex flex-col px-4 sm:px-6 lg:px-8 pt-20 pb-12">
@@ -133,49 +164,49 @@ export default function RealTimeSearch() {
                             <div className="flex flex-col gap-4 mb-6 border-b border-gray-800 pb-4">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xl font-bold text-accent-yellow tracking-tight">Tech News</h3>
-                                    <div className="flex bg-[#111] rounded-lg p-1 border border-gray-800">
-                                        <button
-                                            onClick={() => { setNewsSource('hn'); setNewsCategory('latest'); }}
-                                            className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${newsSource === 'hn' ? 'bg-accent-yellow text-black' : 'text-gray-400 hover:text-white'}`}
-                                        >
-                                            Hacker
-                                        </button>
-                                        <button
-                                            onClick={() => { setNewsSource('devto'); setNewsCategory('latest'); }}
-                                            className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${newsSource === 'devto' ? 'bg-accent-yellow text-black' : 'text-gray-400 hover:text-white'}`}
-                                        >
-                                            Developer
-                                        </button>
-                                    </div>
                                 </div>
 
                                 <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                                    {newsSource === 'hn' ? (
-                                        <>
-                                            {['latest', 'top'].map((cat) => (
-                                                <button
-                                                    key={cat}
-                                                    onClick={() => setNewsCategory(cat as any)}
-                                                    className={`px-3 py-1 text-xs font-mono uppercase tracking-wider rounded-full border transition-all whitespace-nowrap ${newsCategory === cat ? 'border-accent-yellow text-accent-yellow bg-accent-yellow/10' : 'border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300'}`}
-                                                >
-                                                    {cat}
-                                                </button>
-                                            ))}
-                                        </>
-                                    ) : (
-                                        <>
-                                            {['latest', 'top'].map((cat) => (
-                                                <button
-                                                    key={cat}
-                                                    onClick={() => setNewsCategory(cat as any)}
-                                                    className={`px-3 py-1 text-xs font-mono uppercase tracking-wider rounded-full border transition-all whitespace-nowrap ${newsCategory === cat ? 'border-accent-yellow text-accent-yellow bg-accent-yellow/10' : 'border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300'}`}
-                                                >
-                                                    {cat}
-                                                </button>
-                                            ))}
-                                        </>
-                                    )}
+                                    <button
+                                        onClick={() => { setNewsSource('hn'); setNewsCategory('latest'); }}
+                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap ${newsSource === 'hn' ? 'bg-accent-yellow text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-gray-800'}`}
+                                    >
+                                        HN
+                                    </button>
+                                    <button
+                                        onClick={() => { setNewsSource('devto'); setNewsCategory('latest'); }}
+                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap ${newsSource === 'devto' ? 'bg-accent-yellow text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-gray-800'}`}
+                                    >
+                                        DEV
+                                    </button>
+                                    <button
+                                        onClick={() => { setNewsSource('reddit'); setNewsCategory('latest'); }}
+                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap ${newsSource === 'reddit' ? 'bg-accent-yellow text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-gray-800'}`}
+                                    >
+                                        Reddit
+                                    </button>
+                                    <button
+                                        onClick={() => { setNewsSource('github'); setNewsCategory('latest'); }}
+                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap ${newsSource === 'github' ? 'bg-accent-yellow text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-gray-800'}`}
+                                    >
+                                        GitHub
+                                    </button>
                                 </div>
+
+                                {(newsSource === 'hn' || newsSource === 'devto' || newsSource === 'reddit') && (
+                                    <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                        {['latest', 'top'].map((cat) => (
+                                            <button
+                                                key={cat}
+                                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                onClick={() => setNewsCategory(cat as any)}
+                                                className={`px-3 py-1 text-xs font-mono uppercase tracking-wider rounded-full border transition-all whitespace-nowrap ${newsCategory === cat ? 'border-accent-yellow text-accent-yellow bg-accent-yellow/10' : 'border-gray-800 text-gray-500 hover:border-gray-600 hover:text-gray-300'}`}
+                                            >
+                                                {cat}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {isNewsLoading ? (
@@ -192,15 +223,20 @@ export default function RealTimeSearch() {
                                             href={item.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="group block p-4 bg-[#111] border border-gray-800 hover:border-accent-yellow transition-all duration-200 hover:translate-x-1"
+                                            className="group block bg-[#111] border border-gray-800 hover:border-accent-yellow transition-all duration-200 hover:translate-x-1 overflow-hidden"
                                         >
-                                            <div className="flex items-start justify-between gap-4">
-                                                <h4 className="font-medium text-gray-300 group-hover:text-accent-yellow transition-colors line-clamp-2 text-sm">
-                                                    {item.title}
-                                                </h4>
-                                                <span className="text-xs font-mono text-gray-600 group-hover:text-gray-400 flex-shrink-0">
-                                                    {item.source === 'Hacker News' ? 'HN' : 'DEV'} ↗
-                                                </span>
+                                            
+                                            <div className="p-4">
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <h4 className="font-medium text-gray-300 group-hover:text-accent-yellow transition-colors line-clamp-2 text-sm">
+                                                        {item.title}
+                                                    </h4>
+                                                    <span className="text-xs font-mono text-gray-600 group-hover:text-gray-400 shrink-0">
+                                                        {item.source === 'Hacker News' ? 'HN' : 
+                                                         item.source === 'Dev.to' ? 'DEV' : 
+                                                         item.source === 'Reddit' ? 'RD' : 'GH'} ↗
+                                                    </span>
+                                                </div>
                                             </div>
                                         </a>
                                     ))}
