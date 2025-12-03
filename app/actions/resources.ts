@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 
 export async function getResources() {
@@ -9,6 +10,10 @@ export async function getResources() {
                 createdAt: 'desc',
             },
         });
+
+        // Revalidate to ensure fresh data
+        revalidatePath('/resources');
+
         return resources;
     } catch (error) {
         console.error('Error fetching resources:', error);

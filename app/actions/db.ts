@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 
 export async function getSearchResults(query: string) {
@@ -9,20 +10,28 @@ export async function getSearchResults(query: string) {
 
     const lowerQuery = query.toLowerCase();
 
-    const results = await prisma.searchResult.findMany({
-        where: {
-            OR: [
-                { title: { contains: lowerQuery, mode: 'insensitive' } },
-                { description: { contains: lowerQuery, mode: 'insensitive' } },
-                { category: { contains: lowerQuery, mode: 'insensitive' } },
-            ],
-        },
-        orderBy: {
-            createdAt: 'desc',
-        },
-    });
+    try {
+        const results = await prisma.searchResult.findMany({
+            where: {
+                OR: [
+                    { title: { contains: lowerQuery, mode: 'insensitive' } },
+                    { description: { contains: lowerQuery, mode: 'insensitive' } },
+                    { category: { contains: lowerQuery, mode: 'insensitive' } },
+                ],
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
 
-    return results;
+        // Revalidate to ensure fresh data on next request
+        revalidatePath('/');
+
+        return results;
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        return [];
+    }
 }
 
 // Alias for real-time search from client components
@@ -31,11 +40,19 @@ export async function searchInRealTime(query: string) {
 }
 
 export async function getAllResults() {
-    const results = await prisma.searchResult.findMany({
-        orderBy: {
-            createdAt: 'desc',
-        },
-    });
+    try {
+        const results = await prisma.searchResult.findMany({
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
 
-    return results;
+        // Revalidate to ensure fresh data
+        revalidatePath('/');
+
+        return results;
+    } catch (error) {
+        console.error('Error fetching all results:', error);
+        return [];
+    }
 }
