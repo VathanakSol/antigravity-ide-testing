@@ -20,7 +20,7 @@ const kantumruy = Kantumruy_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Developer 20250",
+  title: "Developer 2025",
   description: "Future Platform For Developers",
 };
 

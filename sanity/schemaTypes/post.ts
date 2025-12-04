@@ -28,6 +28,23 @@ export default defineType({
             },
         }),
         defineField({
+            name: 'category',
+            title: 'Category',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Technology', value: 'technology' },
+                    { title: 'Programming', value: 'programming' },
+                    { title: 'Web Development', value: 'web-development' },
+                    { title: 'AI & Machine Learning', value: 'ai-ml' },
+                    { title: 'News', value: 'news' },
+                    { title: 'Tutorial', value: 'tutorial' },
+                    { title: 'Opinion', value: 'opinion' },
+                ],
+            },
+            validation: (Rule) => Rule.required(),
+        }),
+        defineField({
             name: 'publishedAt',
             title: 'Published at',
             type: 'datetime',

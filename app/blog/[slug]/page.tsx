@@ -4,6 +4,7 @@ import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 
 // Revalidate every 60 seconds
 export const revalidate = 60
@@ -14,9 +15,125 @@ async function getPost(slug: string) {
     title,
     mainImage,
     publishedAt,
-    body
+    category,
+    body,
+    "excerpt": array::join(string::split((pt::text(body)), "")[0..160], "") + "..."
   }`
     return client.fetch(query, { slug })
+}
+
+// Dynamic Metadata Generation for SEO
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params
+    const post = await getPost(slug)
+
+    if (!post) {
+        return {
+            title: 'Post Not Found | Developer 2050',
+            description: 'The requested blog post could not be found.',
+        }
+    }
+
+    const publishedTime = new Date(post.publishedAt).toISOString()
+    const postUrl = `https://naktech.vercel.app/blog/${slug}`
+    const imageUrl = post.mainImage
+        ? urlFor(post.mainImage).width(1200).height(630).url()
+        : 'https://utfs.io/a/30qinxb2cu/v2QQauFkR64MFttuSo6kuIYcCWOXQ4ENVn2BJAxpq7i6hd9L'
+
+    // Clean excerpt for description
+    const description = post.excerpt || `Read about ${post.title} on Developer 2050 blog. Expert insights on ${post.category}.`
+
+    return {
+        title: `${post.title} | Developer 2050 Blog`,
+        description: description,
+        keywords: [
+            post.title,
+            post.category,
+            'developer blog',
+            'programming tutorial',
+            'tech article',
+            'web development',
+            'coding tips',
+            'software development',
+            'developer 2050',
+        ],
+        authors: [{ name: 'Developer 2050' }],
+        creator: 'Developer 2050',
+        publisher: 'Developer 2050',
+        category: post.category,
+        openGraph: {
+            type: 'article',
+            locale: 'en_US',
+            url: postUrl,
+            siteName: 'Developer 2050',
+            title: post.title,
+            description: description,
+            publishedTime: publishedTime,
+            authors: ['Developer 2050'],
+            tags: [post.category, 'technology', 'programming', 'development'],
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: post.title,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            site: '@developer2050',
+            creator: '@developer2050',
+            title: post.title,
+            description: description,
+            images: [imageUrl],
+        },
+        alternates: {
+            canonical: postUrl,
+        },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+        },
+        other: {
+            // JSON-LD Structured Data for Rich Snippets
+            'script:ld+json': JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'BlogPosting',
+                headline: post.title,
+                image: imageUrl,
+                datePublished: publishedTime,
+                dateModified: publishedTime,
+                author: {
+                    '@type': 'Person',
+                    name: 'Developer 2050',
+                    url: 'https://naktech.vercel.app',
+                },
+                publisher: {
+                    '@type': 'Organization',
+                    name: 'Developer 2050',
+                    logo: {
+                        '@type': 'ImageObject',
+                        url: 'https://utfs.io/a/30qinxb2cu/v2QQauFkR64MFttuSo6kuIYcCWOXQ4ENVn2BJAxpq7i6hd9L',
+                    },
+                },
+                description: description,
+                mainEntityOfPage: {
+                    '@type': 'WebPage',
+                    '@id': postUrl,
+                },
+                articleSection: post.category,
+                keywords: `${post.category}, programming, web development, technology`,
+            }),
+        },
+    }
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -28,7 +145,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     }
 
     return (
-        <article className="min-h-screen bg-white dark:bg-[#0F1530]">
+        <article className="min-h-screen max-w-6xl mx-auto bg-[#0F1530] dark:bg-[#0F1530]">
             {/* Hero Section */}
             <div className="w-full flex flex-col md:flex-row h-auto md:h-[500px]">
                 {/* Left: Image */}
@@ -58,14 +175,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <div className="w-full md:w-1/2 bg-[#10162F] p-8 md:p-12 flex flex-col justify-between text-white relative">
                     {/* Top Row: Category & Socials */}
                     <div className="flex items-center justify-between mb-8">
-                        <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFD300]">
-                            Technology
+                        <span className="text-xs py-1 rounded-full text-accent-yellow font-bold tracking-[0.2em] uppercase text-[#FFD300]">
+                            {post.category.toUpperCase()}
                         </span>
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 ">
                             {/* Social Placeholders */}
-                            <button className="hover:opacity-75 transition-opacity"><svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg></button>
-                            <button className="hover:opacity-75 transition-opacity"><svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg></button>
-                            <button className="hover:opacity-75 transition-opacity"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg></button>
+                            <Link href="https://youtube.com/@naktech-kh"><button className="hover:opacity-75 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256"><path fill="currentColor" d="m163.33 123l-48-32a6 6 0 0 0-9.33 5v64a6 6 0 0 0 9.33 5l48-32a6 6 0 0 0 0-10M118 148.79v-41.58L149.18 128ZM232.4 70a22 22 0 0 0-13.28-15C185 41.79 130.27 42 128 42s-57-.21-91.16 13A22 22 0 0 0 23.6 70c-2.55 9.89-5.6 28-5.6 58s3.05 48.11 5.6 58a22 22 0 0 0 13.28 15C71 214.21 125.72 214 128 214h.71c6.91 0 58-.44 90.45-13a22 22 0 0 0 13.28-15c2.55-9.87 5.6-27.93 5.6-58S235 79.89 232.4 70m-11.62 113a10 10 0 0 1-6 6.86c-32 12.33-86.2 12.14-86.78 12.14s-54.71.2-86.75-12.17a10 10 0 0 1-6-6.86C32.84 173.78 30 156.78 30 128s2.84-45.78 5.22-55a10 10 0 0 1 6-6.86C72.06 54.26 123.53 54 127.76 54h.24c.54 0 54.71-.2 86.75 12.17a10 10 0 0 1 6 6.86c2.38 9.19 5.22 26.19 5.22 55s-2.81 45.75-5.19 54.97" /></svg></button></Link>
+                            <Link href="https://naktech.vercel.app"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" d="M2 12h20m-6 0c0 1.313-.104 2.614-.305 3.827c-.2 1.213-.495 2.315-.867 3.244c-.371.929-.812 1.665-1.297 2.168c-.486.502-1.006.761-1.531.761s-1.045-.259-1.53-.761c-.486-.503-.927-1.24-1.298-2.168c-.372-.929-.667-2.03-.868-3.244A23.6 23.6 0 0 1 8 12c0-1.313.103-2.614.304-3.827s.496-2.315.868-3.244c.371-.929.812-1.665 1.297-2.168C10.955 2.26 11.475 2 12 2s1.045.259 1.53.761c.486.503.927 1.24 1.298 2.168c.372.929.667 2.03.867 3.244C15.897 9.386 16 10.687 16 12Z" opacity=".5" /><path d="M22 12a10 10 0 1 1-20.001 0A10 10 0 0 1 22 12Z" /></g></svg></Link>
                         </div>
                     </div>
 
@@ -77,13 +193,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     {/* Author & Date */}
                     <div className="mt-auto border-t border-white/20 pt-6">
                         <div className="flex items-center justify-between text-sm font-medium">
-                            <span>Developer 2050</span>
+                            <span className="text-[#FFD300]">Developer 2050</span>
                             <span>
                                 {new Date(post.publishedAt).toLocaleDateString(undefined, {
                                     hour: 'numeric',
                                     minute: 'numeric',
                                     hour12: true,
-                                    timeZoneName: 'short'
                                 })} • {new Date(post.publishedAt).toLocaleDateString(undefined, {
                                     month: 'long',
                                     day: 'numeric',
@@ -95,8 +210,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </div>
             </div>
 
+            <div className="w-full h-[1px] bg-[#FFD300] mt-16"></div>
             {/* Content Body */}
-            <div className="container mx-auto px-4 py-16 max-w-6xl text-black">
+            <div className="container mx-auto px-4 md:px-8 text-white">
                 <div className="prose prose-lg dark:prose-invert mx-auto
                     prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-[#10162F] dark:prose-headings:text-white
                     prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-8
@@ -114,12 +230,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                         return null
                                     }
                                     return (
-                                        <div className="relative w-full h-[500px] my-12 rounded-2xl overflow-hidden shadow-xl bg-gray-50 dark:bg-gray-800">
+                                        <div className="relative w-full h-[500px] my-12 rounded-2xl overflow-hidden shadow-2xl group border border-white/10">
+                                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                                             <Image
                                                 src={urlFor(value).url()}
                                                 alt={value.alt || ' '}
                                                 fill
-                                                className="object-cover hover:scale-105 transition-transform duration-700"
+                                                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                                             />
                                         </div>
                                     )
@@ -127,16 +244,53 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             },
                             block: {
                                 h2: ({ children }) => (
-                                    <h2 className="text-3xl md:text-4xl font-bold mt-16 mb-6 text-[#10162F] dark:text-white relative inline-block">
-                                        {children}
-                                        <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-[#FFD300] rounded-full"></span>
+                                    <h2 className="text-2xl md:text-4xl font-black mt-20 mb-8 text-[#FFD300] relative group inline-block">
+                                        <span className="relative z-10 ">{children}</span>
+                                        <span className="absolute -bottom-2 left-0 w-20 h-1 bg-white rounded-full group-hover:w-full transition-all duration-500 ease-out"></span>
                                     </h2>
                                 ),
-                                h3: ({ children }) => <h3 className="text-2xl font-bold mt-10 mb-4 text-[#10162F] dark:text-white">{children}</h3>,
+                                h3: ({ children }) => (
+                                    <h3 className="text-xl md:text-2xl font-extrabold mt-12 mb-6 text-[#FFD300] flex items-center gap-3">
+                                        <span className="w-2 h-6 bg-white rounded-sm"></span>
+                                        {children}
+                                    </h3>
+                                ),
                                 blockquote: ({ children }) => (
-                                    <blockquote className="border-l-4 border-[#FFD300] pl-6 py-2 my-10 bg-gray-50 dark:bg-gray-800/50 rounded-r-xl italic text-xl text-gray-700 dark:text-gray-300">
-                                        "{children}"
-                                    </blockquote>
+                                    <div className="relative my-12 pl-8 md:pl-12 border-l-4 border-[#FFD300]">
+                                        <div className="absolute -top-4 -left-3 bg-[#0F1530] p-2">
+                                            <svg className="w-8 h-8 text-[#FFD300]" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91198 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z" />
+                                            </svg>
+                                        </div>
+                                        <blockquote className="text-xl md:text-2xl italic text-gray-300 leading-relaxed">
+                                            "{children}"
+                                        </blockquote>
+                                    </div>
+                                ),
+                                normal: ({ children }) => (
+                                    <p className="text-lg md:text-xl leading-relaxed text-gray-300 mb-6">
+                                        {children}
+                                    </p>
+                                ),
+                            },
+                            list: {
+                                bullet: ({ children }) => (
+                                    <ul className="space-y-3 my-6 pl-4">
+                                        {children}
+                                    </ul>
+                                ),
+                                number: ({ children }) => (
+                                    <ol className="space-y-3 my-6 pl-4 list-decimal marker:text-[#FFD300] marker:font-bold text-gray-300 text-lg">
+                                        {children}
+                                    </ol>
+                                ),
+                            },
+                            listItem: {
+                                bullet: ({ children }) => (
+                                    <li className="flex items-start gap-3 text-lg text-gray-300">
+                                        <span className="mt-2.5 w-1.5 h-1.5 bg-[#FFD300] rounded-full shrink-0" />
+                                        <span>{children}</span>
+                                    </li>
                                 ),
                             }
                         }}

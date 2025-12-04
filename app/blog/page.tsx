@@ -2,6 +2,72 @@ import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Metadata } from 'next'
+
+// SEO Metadata for Blog Page
+export const metadata: Metadata = {
+    title: 'Developer Blog | Latest Tech News, Tutorials & Programming Insights',
+    description: 'Explore the latest technology news, programming tutorials, web development tips, and AI insights. Stay updated with expert articles on coding, software development, and tech trends by Developer 2050.',
+    keywords: [
+        'developer blog',
+        'programming tutorials',
+        'web development',
+        'technology news',
+        'coding tips',
+        'software development',
+        'AI and machine learning',
+        'tech articles',
+        'programming blog',
+        'developer resources',
+        'JavaScript tutorials',
+        'React tutorials',
+        'Next.js blog',
+        'tech insights',
+        'developer 2050'
+    ],
+    authors: [{ name: 'Developer 2050' }],
+    creator: 'Developer 2050',
+    publisher: 'Developer 2050',
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        url: 'https://naktech.vercel.app/blog',
+        siteName: 'Developer 2050',
+        title: 'Developer Blog | Latest Tech News & Programming Tutorials',
+        description: 'Discover cutting-edge technology insights, programming tutorials, and web development tips. Join thousands of developers staying ahead with Developer 2050.',
+        images: [
+            {
+                url: 'https://utfs.io/a/30qinxb2cu/v2QQauFkR64MFttuSo6kuIYcCWOXQ4ENVn2BJAxpq7i6hd9L',
+                width: 1200,
+                height: 630,
+                alt: 'Developer 2050 Blog - Tech News and Tutorials',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        site: '@developer2050',
+        creator: '@developer2050',
+        title: 'Developer Blog | Latest Tech News & Programming Tutorials',
+        description: 'Explore the latest in tech, programming, web development, and AI. Expert insights and tutorials for developers.',
+        images: ['https://utfs.io/a/30qinxb2cu/v2QQauFkR64MFttuSo6kuIYcCWOXQ4ENVn2BJAxpq7i6hd9L'],
+    },
+    alternates: {
+        canonical: 'https://naktech.vercel.app/blog',
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+    category: 'Technology',
+}
 
 // Revalidate every 60 seconds
 export const revalidate = 60
@@ -13,9 +79,39 @@ async function getPosts() {
     slug,
     mainImage,
     publishedAt,
+    category,
     "excerpt": array::join(string::split((pt::text(body)), "")[0..200], "") + "..."
   }`
     return client.fetch(query)
+}
+
+function getRelativeTime(dateString: string): string {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInMs = now.getTime() - past.getTime();
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    const diffInMonths = Math.floor(diffInDays / 30);
+    const diffInYears = Math.floor(diffInDays / 365);
+
+    if (diffInSeconds < 60) {
+        return 'just now';
+    } else if (diffInMinutes < 60) {
+        return diffInMinutes === 1 ? 'last minute' : `${diffInMinutes} minutes ago`;
+    } else if (diffInHours < 24) {
+        return diffInHours === 1 ? 'last hour' : `${diffInHours} hours ago`;
+    } else if (diffInDays < 7) {
+        return diffInDays === 1 ? 'yesterday' : `${diffInDays} days ago`;
+    } else if (diffInWeeks < 4) {
+        return diffInWeeks === 1 ? 'last week' : `${diffInWeeks} weeks ago`;
+    } else if (diffInMonths < 12) {
+        return diffInMonths === 1 ? 'last month' : `${diffInMonths} months ago`;
+    } else {
+        return diffInYears === 1 ? 'last year' : `${diffInYears} years ago`;
+    }
 }
 
 export default async function BlogPage() {
@@ -40,8 +136,8 @@ export default async function BlogPage() {
                             )}
                             <div className="flex-1 flex flex-col pt-1">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-xs font-bold text-accent-yellow uppercase tracking-wider">
-                                        LATEST
+                                    <span className=" text-gray-400 text-sm">
+                                        {post.category.toUpperCase()}
                                     </span>
                                 </div>
                                 <h2 className="text-xl md:text-2xl font-bold mb-3 text-accent-yellow dark:text-gray-100 transition-colors leading-tight">
@@ -50,12 +146,8 @@ export default async function BlogPage() {
                                 <div className="flex items-center text-gray-500 text-sm mt-auto">
                                     <span className="font-medium mr-2">Developer 2050</span>
                                     <span>•</span>
-                                    <span className="ml-2">
-                                        {new Date(post.publishedAt).toLocaleDateString(undefined, {
-                                            month: 'short',
-                                            day: 'numeric',
-                                            year: 'numeric'
-                                        })}
+                                    <span className="ml-2 text-gray-400 text-sm">
+                                        {getRelativeTime(post.publishedAt)}
                                     </span>
                                 </div>
                             </div>

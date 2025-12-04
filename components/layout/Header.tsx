@@ -26,6 +26,16 @@ const navIcons = {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
     ),
+    Tools: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        </svg>
+    ),
+    'Developer Hub': (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+    ),
     'JSON Generator': (
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -53,20 +63,38 @@ const navIcons = {
     ),
 };
 
+const toolsItems = [
+    { name: 'JSON Generator', href: '/json-generator' },
+    { name: 'Remove BG', href: '/remove-background' },
+];
+
+const developerHubItems = [
+    { name: 'Learning Paths', href: '/learning-path' },
+    { name: 'Resources', href: '/resources' },
+];
+
 export function Header() {
     const pathname = usePathname();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [toolsOpen, setToolsOpen] = useState(false);
+    const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
+    const [devHubOpen, setDevHubOpen] = useState(false);
+    const [mobileDevHubOpen, setMobileDevHubOpen] = useState(false);
+    const toolsDropdownRef = useRef<HTMLDivElement>(null);
+    const devHubDropdownRef = useRef<HTMLDivElement>(null);
+
     const navItems = [
         { name: 'Home', href: '/' },
-        { name: 'Resources', href: '/resources' },
-        { name: 'Learning Paths', href: '/learning-path' },
+        { name: 'Developer Hub', href: '#', isDropdown: true, dropdownType: 'devhub' },
+        { name: 'Tools', href: '#', isDropdown: true, dropdownType: 'tools' },
         { name: 'AI Chat', href: '/chat' },
-        { name: 'JSON Generator', href: '/json-generator' },
-        { name: 'Upload', href: '/upload' },
-        { name: 'Remove BG', href: '/remove-background' },
         { name: 'Blog', href: '/blog' },
+        { name: 'Upload', href: '/upload' },
         { name: 'About', href: '/about' },
     ];
+
+    const isToolsActive = toolsItems.some(item => pathname === item.href);
+    const isDevHubActive = developerHubItems.some(item => pathname === item.href);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -75,11 +103,35 @@ export function Header() {
 
     useEffect(() => {
         function onKey(e: KeyboardEvent) {
-            if (e.key === 'Escape') setMobileOpen(false);
+            if (e.key === 'Escape') {
+                setMobileOpen(false);
+                setToolsOpen(false);
+                setDevHubOpen(false);
+            }
         }
-        if (mobileOpen) document.addEventListener('keydown', onKey);
+        if (mobileOpen || toolsOpen || devHubOpen) document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
-    }, [mobileOpen]);
+    }, [mobileOpen, toolsOpen, devHubOpen]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target as Node)) {
+                setToolsOpen(false);
+            }
+            if (devHubDropdownRef.current && !devHubDropdownRef.current.contains(event.target as Node)) {
+                setDevHubOpen(false);
+            }
+        }
+
+        if (toolsOpen || devHubOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [toolsOpen, devHubOpen]);
 
     // Prevent background scrolling and avoid layout shift when modal opens
     const bodyPrevStyleRef = useRef<{ overflow?: string; paddingRight?: string } | null>(null);
@@ -131,15 +183,77 @@ export function Header() {
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex items-center gap-6">
                         <nav className="flex gap-6 text-sm font-medium text-white">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className={`transition-colors hover:text-accent-yellow ${pathname === item.href ? 'text-accent-yellow font-semibold' : 'text-white/80'}`}
-                                >
-                                    {item.name}
-                                </Link>
-                            ))}
+                            {navItems.map((item) => {
+                                if (item.isDropdown) {
+                                    const isDevHub = item.dropdownType === 'devhub';
+                                    const isTools = item.dropdownType === 'tools';
+                                    const dropdownOpen = isDevHub ? devHubOpen : toolsOpen;
+                                    const setDropdownOpen = isDevHub ? setDevHubOpen : setToolsOpen;
+                                    const dropdownRef = isDevHub ? devHubDropdownRef : toolsDropdownRef;
+                                    const dropdownItems = isDevHub ? developerHubItems : toolsItems;
+                                    const isActive = isDevHub ? isDevHubActive : isToolsActive;
+
+                                    return (
+                                        <div key={item.name} className="relative" ref={dropdownRef}>
+                                            <button
+                                                onClick={() => {
+                                                    if (isDevHub) {
+                                                        setDevHubOpen(!devHubOpen);
+                                                        setToolsOpen(false);
+                                                    } else {
+                                                        setToolsOpen(!toolsOpen);
+                                                        setDevHubOpen(false);
+                                                    }
+                                                }}
+                                                onMouseEnter={() => {
+                                                    if (isDevHub) {
+                                                        setDevHubOpen(true);
+                                                        setToolsOpen(false);
+                                                    } else {
+                                                        setToolsOpen(true);
+                                                        setDevHubOpen(false);
+                                                    }
+                                                }}
+                                                className={`flex items-center gap-1 transition-colors hover:text-accent-yellow ${isActive ? 'text-accent-yellow font-semibold' : 'text-white/80'}`}
+                                            >
+                                                {item.name}
+                                                <svg className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </button>
+
+                                            {dropdownOpen && (
+                                                <div
+                                                    className="absolute top-full mt-2 left-0 w-56 bg-[#0F1530] border border-gray-700 rounded-lg shadow-xl overflow-hidden z-50"
+                                                    onMouseLeave={() => setDropdownOpen(false)}
+                                                >
+                                                    {dropdownItems.map((dropdownItem) => (
+                                                        <Link
+                                                            key={dropdownItem.name}
+                                                            href={dropdownItem.href}
+                                                            onClick={() => setDropdownOpen(false)}
+                                                            className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${pathname === dropdownItem.href ? 'text-accent-yellow bg-[#FFD300]/10' : 'text-white/90 hover:text-accent-yellow hover:bg-white/5'}`}
+                                                        >
+                                                            {navIcons[dropdownItem.name as keyof typeof navIcons]}
+                                                            {dropdownItem.name}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className={`transition-colors hover:text-accent-yellow ${pathname === item.href ? 'text-accent-yellow font-semibold' : 'text-white/80'}`}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                );
+                            })}
                         </nav>
                         <div className="border-l border-gray-700 pl-6">
                             <BetaToggle flagName="features_enabled" />
@@ -179,25 +293,67 @@ export function Header() {
                         className="fixed left-1/2 transform -translate-x-1/2 top-20 z-50 w-[min(640px,calc(100%-32px))]"
                     >
                         <div className="rounded-lg bg-[#0F1530] border border-gray-800 shadow-lg overflow-hidden">
-
-
                             <nav className="flex flex-col p-4 gap-2">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        onClick={() => setMobileOpen(false)}
-                                        className={`flex items-center gap-3 w-full px-4 py-2 rounded text-sm font-semibold ${pathname === item.href ? 'text-accent-yellow' : 'text-white/90 hover:text-accent-yellow'}`}
-                                    >
-                                        {navIcons[item.name as keyof typeof navIcons]}
-                                        {item.name}
-                                    </Link>
-                                ))}
+                                {navItems.map((item) => {
+                                    if (item.isDropdown) {
+                                        const isDevHub = item.dropdownType === 'devhub';
+                                        const isTools = item.dropdownType === 'tools';
+                                        const dropdownOpen = isDevHub ? mobileDevHubOpen : mobileToolsOpen;
+                                        const setDropdownOpen = isDevHub ? setMobileDevHubOpen : setMobileToolsOpen;
+                                        const dropdownItems = isDevHub ? developerHubItems : toolsItems;
+                                        const isActive = isDevHub ? isDevHubActive : isToolsActive;
+                                        const iconKey = isDevHub ? 'Developer Hub' : 'Tools';
+
+                                        return (
+                                            <div key={item.name}>
+                                                <button
+                                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                    className={`flex items-center justify-between w-full px-4 py-2 rounded text-sm font-semibold ${isActive ? 'text-accent-yellow' : 'text-white/90 hover:text-accent-yellow'}`}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        {navIcons[iconKey as keyof typeof navIcons]}
+                                                        {item.name}
+                                                    </div>
+                                                    <svg className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+
+                                                {dropdownOpen && (
+                                                    <div className="ml-8 mt-1 space-y-1">
+                                                        {dropdownItems.map((dropdownItem) => (
+                                                            <Link
+                                                                key={dropdownItem.name}
+                                                                href={dropdownItem.href}
+                                                                onClick={() => setMobileOpen(false)}
+                                                                className={`flex items-center gap-3 w-full px-4 py-2 rounded text-sm font-medium ${pathname === dropdownItem.href ? 'text-accent-yellow bg-[#FFD300]/10' : 'text-white/70 hover:text-accent-yellow'}`}
+                                                            >
+                                                                {navIcons[dropdownItem.name as keyof typeof navIcons]}
+                                                                {dropdownItem.name}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            href={item.href}
+                                            onClick={() => setMobileOpen(false)}
+                                            className={`flex items-center gap-3 w-full px-4 py-2 rounded text-sm font-semibold ${pathname === item.href ? 'text-accent-yellow' : 'text-white/90 hover:text-accent-yellow'}`}
+                                        >
+                                            {navIcons[item.name as keyof typeof navIcons]}
+                                            {item.name}
+                                        </Link>
+                                    );
+                                })}
                             </nav>
 
                             <div className="border-t border-gray-700 px-4 py-3">
                                 <div className="flex items-center justify-between">
-                                    {/* <span className="text-xs font-bold text-[#00FFF0] uppercase tracking-wider">Beta Mode</span> */}
                                     <BetaToggle flagName="features_enabled" />
                                 </div>
                             </div>
