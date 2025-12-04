@@ -90,6 +90,7 @@ function UploadFeature() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Download modal states
@@ -307,14 +308,18 @@ function UploadFeature() {
     }
   };
 
+  const filteredImages = images.filter((image) =>
+    image.key.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen p-4 md:p-8">
       <div
-        className={`max-w-7xl mx-auto mb-8 transition-all duration-300 ${previewImage ? "mr-[420px]" : ""
+        className={`max-w-7xl mx-auto mb-8 transition-all duration-300 ${previewImage ? "lg:mr-[420px]" : ""
           }`}
       >
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="w-full md:w-auto text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-bold text-accent-yellow mb-2">
               Stock Image
             </h1>
@@ -326,19 +331,17 @@ function UploadFeature() {
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Link
-              href={"/manage-images"}
-              className="bg-[#FFD300] text-[#10162F] px-6 py-2 font-black uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-1 hover:shadow-none active:translate-y-1 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap flex items-center gap-2"
-            >
-              Manage Images
-            </Link>
-            <button
-              onClick={() => setShowUploadModal(true)}
-              className="bg-[#FFD300] text-[#10162F] px-6 py-2 font-black uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-1 hover:shadow-none active:translate-y-1 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap flex items-center gap-2"
-            >
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <div className="relative w-full sm:w-auto sm:flex-1 md:w-64">
+              <input
+                type="text"
+                placeholder="Search images..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-card-bg border-2 border-gray-700 rounded-lg px-4 py-2 pl-10 text-white focus:border-accent-yellow focus:outline-none transition-colors"
+              />
               <svg
-                className="w-5 h-5"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -347,18 +350,45 @@ function UploadFeature() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 4v16m8-8H4"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-              Upload
-            </button>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-center">
+              <Link
+                href={"/manage-images"}
+                className="flex-1 sm:flex-none justify-center bg-[#FFD300] text-[#10162F] px-4 sm:px-6 py-2 font-black uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-1 hover:shadow-none active:translate-y-1 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap flex items-center gap-2 text-sm sm:text-base"
+              >
+                Manage
+              </Link>
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="flex-1 sm:flex-none justify-center bg-[#FFD300] text-[#10162F] px-4 sm:px-6 py-2 font-black uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-1 hover:shadow-none active:translate-y-1 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap flex items-center gap-2 text-sm sm:text-base"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Upload
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {isLoading ? (
         <div
-          className={`max-w-7xl mx-auto transition-all duration-300 ${previewImage ? "mr-[420px]" : ""
+          className={`max-w-7xl mx-auto transition-all duration-300 ${previewImage ? "lg:mr-[420px]" : ""
             }`}
         >
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
@@ -379,11 +409,11 @@ function UploadFeature() {
         </div>
       ) : (
         <div
-          className={`max-w-6xl container mx-auto transition-all duration-300 ${previewImage ? "mr-[420px]" : ""
+          className={`max-w-6xl container mx-auto transition-all duration-300 ${previewImage ? "lg:mr-[420px]" : ""
             }`}
         >
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-3 space-y-3">
-            {images.map((image, index) => (
+            {filteredImages.map((image, index) => (
               <div
                 key={image.key}
                 className="break-inside-avoid group relative bg-card-bg rounded-lg overflow-hidden hover:scale-[1.02] transition-all duration-300 cursor-pointer shadow-md hover:shadow-accent-yellow/2"

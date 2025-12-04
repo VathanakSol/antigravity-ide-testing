@@ -9,7 +9,10 @@ const nextConfig: NextConfig = {
         hostname: '**'
       }
     ]
-  }
+  },
+  // Empty turbopack config to silence the warning
+  // Turbopack handles WASM automatically
+  turbopack: {},
 };
 
 export default nextConfig;

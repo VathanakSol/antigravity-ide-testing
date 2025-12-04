@@ -10,6 +10,35 @@ interface ImageData {
     size?: number;
 }
 
+
+// Helper function to format relative time
+function getRelativeTime(date: Date): string {
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+    const diffInMonths = Math.floor(diffInDays / 30);
+    const diffInYears = Math.floor(diffInDays / 365);
+
+    if (diffInYears > 0) {
+        return diffInYears === 1 ? "1 year ago" : `${diffInYears} years ago`;
+    } else if (diffInMonths > 0) {
+        return diffInMonths === 1 ? "1 month ago" : `${diffInMonths} months ago`;
+    } else if (diffInDays > 0) {
+        return diffInDays === 1 ? "1 day ago" : `${diffInDays} days ago`;
+    } else if (diffInHours > 0) {
+        return diffInHours === 1 ? "last 1 hour" : `last ${diffInHours} hours`;
+    } else if (diffInMinutes > 0) {
+        return diffInMinutes === 1
+            ? "last 1 minute"
+            : `last ${diffInMinutes} minutes`;
+    } else {
+        return "just now";
+    }
+}
+
 export default function ManageImages() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
@@ -274,7 +303,7 @@ export default function ManageImages() {
                                                 {img.size ? (img.size / 1024).toFixed(2) + " KB" : "-"}
                                             </td>
                                             <td className="p-4 text-sm text-gray-400">
-                                                {img.lastModified ? new Date(img.lastModified).toLocaleDateString() : "-"}
+                                                {img.lastModified ? getRelativeTime(new Date(img.lastModified)) : "-"}
                                             </td>
                                             <td className="p-4 text-right">
                                                 <div className="flex justify-end gap-2">

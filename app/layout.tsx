@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Kantumruy_Pro } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
+import { Analytics } from "@vercel/analytics/react";
+
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -18,8 +20,8 @@ const kantumruy = Kantumruy_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "NakTech Search",
-  description: "Search Engine For Developers",
+  title: "Developer 20250",
+  description: "Future Platform For Developers",
 };
 
 export default function RootLayout({
@@ -34,6 +36,7 @@ export default function RootLayout({
       >
         <Header />
         {children}
+        <Analytics />
       </body>
     </html>
   );

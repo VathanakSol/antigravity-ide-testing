@@ -289,12 +289,7 @@ export default function RealTimeSearch() {
                                     >
                                         Dev
                                     </button>
-                                    <button
-                                        onClick={() => { setNewsSource('reddit'); setNewsCategory('latest'); }}
-                                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap ${newsSource === 'reddit' ? 'bg-accent-yellow text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-gray-800'}`}
-                                    >
-                                        Reddit
-                                    </button>
+                                    
                                     <button
                                         onClick={() => { setNewsSource('github'); setNewsCategory('latest'); }}
                                         className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap ${newsSource === 'github' ? 'bg-accent-yellow text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-gray-800'}`}
@@ -303,7 +298,7 @@ export default function RealTimeSearch() {
                                     </button>
                                 </div>
 
-                                {(newsSource === 'hn' || newsSource === 'devto' || newsSource === 'reddit') && (
+                                {(newsSource === 'hn' || newsSource === 'devto') && (
                                     <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                         {['latest', 'top'].map((cat) => (
                                             <button
@@ -344,7 +339,7 @@ export default function RealTimeSearch() {
                                                     <span className="text-xs font-mono text-gray-600 group-hover:text-gray-400 shrink-0">
                                                         {item.source === 'Hacker News' ? 'HN' :
                                                             item.source === 'Dev.to' ? 'DEV' :
-                                                                item.source === 'Reddit' ? 'RD' : 'GH'} ↗
+                                                                item.source === 'GitHub' ? 'GH' : 'GH'} ↗
                                                     </span>
                                                 </div>
                                             </div>

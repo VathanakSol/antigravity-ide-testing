@@ -20,12 +20,13 @@ const TARGET_ROLES = [
     'Frontend Developer',
     'Backend Developer',
     'Full-Stack Developer',
-    'Mobile Developer',
     'DevOps Engineer',
-    'Data Engineer',
+    'Data Scientist',
+    'Mobile Developer',
+    'Prompt Engineer',
     'Machine Learning Engineer',
-    'Cloud Architect',
-    'UI/UX Developer',
+    'Cloud Engineer',
+    'UI/UX Designer',
     'Game Developer',
 ];
 
@@ -37,11 +38,11 @@ const LEARNING_STYLES = [
 ];
 
 const COMMON_SKILLS = [
-    'HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Vue', 'Angular',
+    'HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Next.js', 'Vue', 'Angular',
     'Node.js', 'Python', 'Java', 'C#', 'Go', 'Rust',
     'SQL', 'MongoDB', 'PostgreSQL', 'Redis',
-    'Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP',
-    'Git', 'CI/CD', 'Testing', 'Agile',
+    'Docker', 'Kubernetes', 'AWS', 'DigitalOcean', 'Azure', 'GCP',
+    'Git', 'CI/CD', 'Testing', 'SDLC',
 ];
 
 export function OnboardingForm({ onComplete, isLoading }: OnboardingFormProps) {
