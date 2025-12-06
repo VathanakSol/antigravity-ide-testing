@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Analytics } from "@vercel/analytics/react";
 import { Footer } from "@/components/layout/Footer";
+import { siteConfig } from "@/config/site";
 
 
 const spaceGrotesk = Space_Grotesk({
@@ -22,30 +23,14 @@ const kantumruy = Kantumruy_Pro({
 
 export const metadata: Metadata = {
   title: {
-    default: "Developer 2050 - Future Platform For Developers",
-    template: "%s | Developer 2050",
+    default: `${siteConfig.name} - Future Platform For Developers`,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "Discover the future of development with Developer 2050. Learn cutting-edge technologies, access AI-powered learning paths, explore interactive tutorials, and stay ahead with the latest tech trends. Your comprehensive platform for modern software development.",
-  keywords: [
-    "developer platform",
-    "programming tutorials",
-    "coding education",
-    "AI learning path",
-    "software development",
-    "web development",
-    "technology trends",
-    "coding resources",
-    "developer tools",
-    "tech learning",
-    "programming courses",
-    "code tutorials",
-    "developer community",
-    "tech education",
-    "future technologies",
-  ],
-  authors: [{ name: "Developer 2050 Team" }],
-  creator: "Developer 2050",
-  publisher: "Developer 2050",
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: siteConfig.authors,
+  creator: siteConfig.creator,
+  publisher: siteConfig.publisher,
   robots: {
     index: true,
     follow: true,
@@ -60,39 +45,39 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://v2050.vercel.app",
-    siteName: "Developer 2050",
-    title: "Developer 2050 - Future Platform For Developers",
-    description: "Discover the future of development with Developer 2050. Learn cutting-edge technologies, access AI-powered learning paths, and stay ahead with the latest tech trends.",
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} - Future Platform For Developers`,
+    description: siteConfig.description,
     images: [
       {
-        url: "https://utfs.io/a/30qinxb2cu/v2QQauFkR64MB9QkP7rteWGKzfUpAxN1wk9nsdSXIZalEy0L",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: "Developer 2050 - Future Platform For Developers",
+        alt: `${siteConfig.name} - Future Platform For Developers`,
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Developer 2050 - Future Platform For Developers",
-    description: "Discover the future of development with Developer 2050. Learn cutting-edge technologies, access AI-powered learning paths, and stay ahead with the latest tech trends.",
-    images: ["https://utfs.io/a/30qinxb2cu/v2QQauFkR64MB9QkP7rteWGKzfUpAxN1wk9nsdSXIZalEy0L"],
-    creator: "@developer2050",
+    card: siteConfig.twitter.cardType,
+    title: `${siteConfig.name} - Future Platform For Developers`,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+    creator: siteConfig.twitter.handle,
   },
   icons: {
     icon: [
-      { url: "https://v2050.vercel.app/favicon.ico" },
-      { url: "https://v2050.vercel.app/icon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "https://v2050.vercel.app/icon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: `${siteConfig.url}/favicon.ico` },
+      { url: `${siteConfig.url}/icon-16x16.png`, sizes: "16x16", type: "image/png" },
+      { url: `${siteConfig.url}/icon-32x32.png`, sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: "https://v2050.vercel.app/apple-icon.png" },
-      { url: "https://v2050.vercel.app/apple-icon-180x180.png", sizes: "180x180", type: "image/png" },
+      { url: `${siteConfig.url}/apple-icon.png` },
+      { url: `${siteConfig.url}/apple-icon-180x180.png`, sizes: "180x180", type: "image/png" },
     ],
   },
-  manifest: "https://v2050.vercel.app/site.webmanifest",
-  metadataBase: new URL("https://v2050.vercel.app"),
+  manifest: `${siteConfig.url}/site.webmanifest`,
+  metadataBase: new URL(siteConfig.url),
   alternates: {
     canonical: "/",
   },

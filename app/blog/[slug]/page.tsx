@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
+import { siteConfig } from '@/config/site'
 
 // Revalidate every 60 seconds
 export const revalidate = 60
@@ -35,10 +36,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
 
     const publishedTime = new Date(post.publishedAt).toISOString()
-    const postUrl = `https://naktech.vercel.app/blog/${slug}`
+    const postUrl = `${siteConfig.url}/blog/${slug}`
     const imageUrl = post.mainImage
         ? urlFor(post.mainImage).width(1200).height(630).url()
-        : 'https://utfs.io/a/30qinxb2cu/v2QQauFkR64MFttuSo6kuIYcCWOXQ4ENVn2BJAxpq7i6hd9L'
+        : siteConfig.ogImage
 
     // Clean excerpt for description
     const description = post.excerpt || `Read about ${post.title} on Developer 2050 blog. Expert insights on ${post.category}.`
@@ -81,9 +82,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             ],
         },
         twitter: {
-            card: 'summary_large_image',
-            site: '@developer2050',
-            creator: '@developer2050',
+            card: siteConfig.twitter.cardType,
+            site: siteConfig.twitter.handle,
+            creator: siteConfig.twitter.handle,
             title: post.title,
             description: description,
             images: [imageUrl],
@@ -114,14 +115,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
                 author: {
                     '@type': 'Person',
                     name: 'Developer 2050',
-                    url: 'https://naktech.vercel.app',
+                    url: siteConfig.url,
                 },
                 publisher: {
                     '@type': 'Organization',
-                    name: 'Developer 2050',
+                    name: siteConfig.name,
                     logo: {
                         '@type': 'ImageObject',
-                        url: 'https://utfs.io/a/30qinxb2cu/v2QQauFkR64MFttuSo6kuIYcCWOXQ4ENVn2BJAxpq7i6hd9L',
+                        url: siteConfig.ogImage,
                     },
                 },
                 description: description,
